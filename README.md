@@ -2,17 +2,17 @@ Sorts and Graphs
 ================
 This repo contains Java implementations with basic explanations of various crucial sort algorithms and data structures.
 
-##Sort algorithms
+####Sort algorithms
 * Insertion Sort 
 * Heap Sort 
 * Merge Sort 
 * Quick Sort 
 
-##Structures 
+####Structures 
 * Binary Tree [Tree_operations directory]
 * Hash Table [Hash_Table directory]
 
-##Graphs [Graph directory] 
+####Graphs [Graph directory] 
 * Basic Graph Structure [with Vertices and weighted Edges]
 * Depth-First-Traversal 
 * Breadth-First-Traversal [todo]

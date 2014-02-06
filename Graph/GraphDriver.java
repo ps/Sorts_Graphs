@@ -2,8 +2,6 @@ public class GraphDriver
 {
 	public static void main(String [] args)
 	{
-		System.out.println(Integer.MAX_VALUE);
-		System.out.println(Integer.MIN_VALUE);
 		Graph myg = new Graph(7);
 		myg.insertEdge(0,1,5);
 		myg.insertEdge(0,2,10);
@@ -21,18 +19,18 @@ public class GraphDriver
 		//System.out.println("Shortest distance from 0-->3[10]: "+myg.shortestPath(0,3));
 
 		//get shortest path 
-		int [] distA = myg.shortestPath(0,true);
+		int [] distA = myg.shortestPath(0);
 		for(int i=1; i<distA.length; i++)
 		{
 			System.out.println("Shortest distance 0-->"+i+": "+distA[i]);
 		}
 		
 		//get longest path 
-		int [] distA2 = myg.shortestPath(0,false);
+		int [] distA3 = myg.longestPath(0);
 		System.out.println();
-		for(int i=1; i<distA2.length; i++)
+		for(int i=1; i<distA3.length; i++)
 		{
-			System.out.println("Longest distance 0-->"+i+": "+distA2[i]);
+			System.out.println("Longest distance 0-->"+i+": "+distA3[i]);
 		}
 	}
 }

@@ -12,41 +12,82 @@ public class Graph
 			graph[i]=new Vertex();
 		}
 	}
+	//insert edge for current graph
 	public void insertEdge(int vnum,int connectedTo, int weigh)
 	{
 		graph[vnum].edges = new Edge(connectedTo, weigh, graph[vnum].edges);
 	}
-	public int [] shortestPath(int start, boolean getM)
+	
+	//returns an array of longest paths to all of the other vertices 
+	//given a start vertex
+	public int [] longestPath(int start)
 	{
 		//setup the fringe (using boolean/int array combo for simplicity)
 		boolean done[] = new boolean[size];
 		done[start]=true;
 		int fringe [] = new int[size];
+
+		//initialize fringe to negative infinity 
 		for(int i=0; i<size; i++)
 		{
-			if(getM)
-				fringe[i]=Integer.MAX_VALUE;
-			else
-				fringe[i]=Integer.MIN_VALUE;
+			fringe[i]=Integer.MIN_VALUE;
 		}
 
 		//set the distances for all neighbors of the start value 
 		for(Edge e = graph[start].edges; e!=null; e=e.next)
 		{
-			//System.out.println("["+start+"] Adding neighbor "+e.verNum+" len: "+e.len);
 			fringe[e.verNum]=e.len;
 		}
 		
 		//printFringe(done,fringe);
-		while(!isFringeEmpty(done,fringe, getM))
+		while(!isFringeEmpty(done,fringe, false))
 		{
 			//printFringe(done,fringe);
-			int min=0;
-			if(getM)
-				min = getMin(done,fringe);
-			else
-				min = getMax(done,fringe);
-			//System.out.println("Got min/max to be 'done': "+min);
+			int max= getMax(done,fringe);
+
+			done[max]=true;
+			for(Edge e = graph[max].edges; e!=null; e=e.next)
+			{
+				//System.out.println("["+min+"] Adding neighbor "+e.verNum+" len: "+e.len);
+				int n = e.verNum;
+				int l = e.len;
+		
+				if(fringe[n] < fringe[max]+l)
+					fringe[n] = fringe[max]+l;
+				
+				//printFringe(done,fringe);
+			}
+		}
+		return fringe;
+	}
+
+
+	//returns an array with shortest distances to all the 
+	//other vertices
+	public int [] shortestPath(int start)
+	{
+		//setup the fringe (using boolean/int array combo for simplicity)
+		boolean done[] = new boolean[size];
+		done[start]=true;
+		int fringe [] = new int[size];
+
+		//set all distances to positive infinity
+		for(int i=0; i<size; i++)
+		{
+			fringe[i]=Integer.MAX_VALUE;
+		}
+
+		//set the distances for all neighbors of the start value 
+		for(Edge e = graph[start].edges; e!=null; e=e.next)
+		{
+			fringe[e.verNum]=e.len;
+		}
+		
+		//printFringe(done,fringe);
+		while(!isFringeEmpty(done,fringe, true))
+		{
+			//printFringe(done,fringe);
+			int min= getMin(done,fringe);
 
 			done[min]=true;
 			for(Edge e = graph[min].edges; e!=null; e=e.next)
@@ -54,22 +95,16 @@ public class Graph
 				//System.out.println("["+min+"] Adding neighbor "+e.verNum+" len: "+e.len);
 				int n = e.verNum;
 				int l = e.len;
-				if(getM)
-				{
-					if(fringe[n] > fringe[min]+l)
-						fringe[n] = fringe[min]+l;
-				}
-				else
-				{
-					if(fringe[n] < fringe[min]+l)
-						fringe[n] = fringe[min]+l;
-				}
+
+				if(fringe[n] > fringe[min]+l)
+					fringe[n] = fringe[min]+l;
 				//printFringe(done,fringe);
 			}
 		}
 		return fringe;
 
 	}
+	//debeug method to see inside of fringe 
 	private void printFringe(boolean [] done, int [] fringe)
 	{
 		for(int i=0; i<size; i++)
@@ -79,6 +114,7 @@ public class Graph
 		System.out.println();
 
 	}
+	//gets the minimum value from the fringe, utilized in SHORTEST path
 	public int getMin(boolean [] done, int [] fringe)
 	{
 		int min = 0;
@@ -92,6 +128,7 @@ public class Graph
 		}
 		return min;
 	}
+	//gets the maximum value from the fringe, utilized in LONGEST path
 	public int getMax(boolean [] done, int [] fringe)
 	{
 		int max = 0;
@@ -105,13 +142,16 @@ public class Graph
 		}
 		return max;
 	}
-	public boolean isFringeEmpty(boolean [] done, int [] fringe, boolean getM)
+	//determine whether to keep going with the algorithm by checking if the 
+	//fringe is empty (the shortPath flag is used to determine whether this 
+	//funcion is being used by the shortestPath or longestPath function
+	public boolean isFringeEmpty(boolean [] done, int [] fringe, boolean shortPath)
 	{
 		for(int i=0; i<size; i++)
 		{
 			if(!done[i])
 			{
-				if(getM)
+				if(shortPath)
 				{
 					if(fringe[i] != Integer.MAX_VALUE)
 						return false;
@@ -125,6 +165,7 @@ public class Graph
 		}
 		return true;
 	}
+	//depth first traversal of the graph structure 
 	public void dfs()
 	{
 		boolean [] visited = new boolean[size];
@@ -145,6 +186,7 @@ public class Graph
 				dfs(visited, e.verNum);
 		}
 	}
+	//simple way to see structure of the graph
 	public void printGraph()
 	{
 		for(int i=0; i<size; i++)

@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Graph
 {
 	private int size;
@@ -175,6 +177,7 @@ public class Graph
 				dfs(visited,i);
 		}
 	}
+	//helper function for the dfs traversal
 	private void dfs(boolean [] visited, int v)
 	{
 		visited[v]=true;
@@ -186,6 +189,31 @@ public class Graph
 				dfs(visited, e.verNum);
 		}
 	}
+
+	public void bfs()
+	{
+		boolean [] visited = new boolean[size];
+
+		Queue<Integer> myList = new LinkedList<Integer>();
+		System.out.println("visiting: "+0);
+		visited[0]=true;
+		myList.add(0);
+
+		while(myList.peek()!=null)
+		{
+			int v = myList.remove();
+			for(Edge e=graph[v].edges; e!=null; e=e.next)
+			{
+				if(!visited[e.verNum])
+				{
+					visited[e.verNum]=true;
+					System.out.println("visiting: "+e.verNum);
+					myList.add(e.verNum);
+				}
+			}
+		}
+	}
+
 	//simple way to see structure of the graph
 	public void printGraph()
 	{

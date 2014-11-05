@@ -189,30 +189,40 @@ public class Graph
 				dfs(visited, e.verNum);
 		}
 	}
-
+        //bread first traversal of graph
 	public void bfs()
 	{
-		boolean [] visited = new boolean[size];
-
-		Queue<Integer> myList = new LinkedList<Integer>();
-		System.out.println("visiting: "+0);
-		visited[0]=true;
-		myList.add(0);
-
-		while(myList.peek()!=null)
-		{
-			int v = myList.remove();
-			for(Edge e=graph[v].edges; e!=null; e=e.next)
-			{
-				if(!visited[e.verNum])
-				{
-					visited[e.verNum]=true;
-					System.out.println("visiting: "+e.verNum);
-					myList.add(e.verNum);
-				}
-			}
-		}
+                boolean [] visited = new boolean[size];
+                for(int i = 0; i<size; i++) {
+                    if (!visited[i])
+                        bfs(visited, i);
+                }
 	}
+        //helper of bfs
+        private void bfs(boolean [] visited, int vnum) {
+	    Queue<Integer> myList = new LinkedList<Integer>();
+
+            myList.add(vnum);
+            while (myList.peek() != null) {    
+                int v = myList.remove();
+                
+                // do not need to check edges of an already visited 
+                // node since visiting implies that it was dequeued
+                // and went past this if statement already hence
+                // the edges of a visited node are already in the queue
+                if (!visited[v]) {
+                    visited[v] = true;
+                    System.out.println("visiting: "+v);
+                    for(Edge e = graph[v].edges; e!=null; e = e.next) {
+                        if (!visited[e.verNum]) {
+                            myList.add(e.verNum);
+                        }
+                    }
+
+                }
+
+            }
+        }
 
 	//simple way to see structure of the graph
 	public void printGraph()
